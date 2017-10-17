@@ -59,7 +59,7 @@ class TelevisionSet
         $this -> volume = 50;
     }
 
-    public function getVolume(): int
+    public function getVolume()
     {
         return $this -> volume;
     }
@@ -99,7 +99,7 @@ class TelevisionSet
         return $this -> channel;
     }
 
-    public function setChannel(int $channel)
+    public function setChannel($channel)
     {
         $this -> channel = $this -> state === self::STATE_ON ? $channel : $this -> channel;
     }
@@ -152,17 +152,17 @@ class Duck
         $this -> weight = $weight;
     }
 
-    public function getAge(): int
+    public function getAge()
     {
         return $this -> age;
     }
 
-    public function getWeight(): int
+    public function getWeight()
     {
         return $this -> weight;
     }
 
-    public function changeWeight(int $changeWeight)
+    public function changeWeight($changeWeight)
     {
         $this -> weight = $this -> weight + $changeWeight >= 1 ? $this -> weight + $changeWeight : 1;
     }
@@ -241,12 +241,12 @@ class Product
         self::$groupDiscount[$group] = $discount;
     }
 
-    public function getProductDiscount(): int
+    public function getProductDiscount()
     {
         return $this -> productDiscount;
     }
 
-    public function setProductDiscount(int $productDiscount)
+    public function setProductDiscount($productDiscount)
     {
         $this -> productDiscount = $productDiscount;
     }
