@@ -6,16 +6,16 @@ class News
     private $title;
     private $author;
     private $content;
-    private $timeStamp;
+    private $dateTime;
     private $comments = [];
 
     public function __construct($title, $content, $author)
     {
-        self ::incrNewsCount();
-        $this -> author = $author;
-        $this -> title = $title;
-        $this -> content = $content;
-        $this -> timeStamp = time();
+        self::incrNewsCount();
+        $this->author = $author;
+        $this->title = $title;
+        $this->content = $content;
+        $this->dateTime = new DateTime();
     }
 
     private static function incrNewsCount()
@@ -30,49 +30,49 @@ class News
 
     public function getAuthor()
     {
-        return $this -> author;
+        return $this->author;
     }
 
     public function getContent()
     {
-        return $this -> content;
+        return $this->content;
     }
 
     public function setContent($content)
     {
-        $this -> content = $content;
+        $this->content = $content;
     }
 
-    public function getTimeStamp($formatted = false)
+    public function getDateTime()
     {
-        return $formatted ? date('H:i d.m.Y', $this -> timeStamp) : $this -> timeStamp;
+        return $this->dateTime->format('H:i d.m.Y');
     }
 
     public function getTitle()
     {
-        return $this -> title;
+        return $this->title;
     }
 
     public function setTitle($title)
     {
-        $this -> title = $title;
+        $this->title = $title;
     }
 
     public function setNewComment($author, $comment)
     {
-        $this -> comments[] = new Comment($author, $comment);
+        $this->comments[] = new Comment($author, $comment);
     }
 
     public function getLastComments($numOfLastComments)
     {
         $lastComments = [];
-        if ($numOfLastComments >= count($this -> comments)) {
+        if ($numOfLastComments >= count($this->comments)) {
             /* если в действительности комментов меньше чем запрашивали - выводим все */
-            return $this -> getAllComments();
+            return $this->getAllComments();
         }
         if ($numOfLastComments > 0) {
-            for ($i = count($this -> comments); $i <= $numOfLastComments; --$i) {
-                $lastComments[] = $this -> comments[$i] -> getFullComment();
+            for ($i = count($this->comments); $i <= $numOfLastComments; --$i) {
+                $lastComments[] = $this->comments[$i]->getFullComment();
             }
         }
         return $lastComments;
@@ -81,8 +81,8 @@ class News
     public function getAllComments()
     {
         $allComments = [];
-        foreach ($this -> comments as $comment) {
-            $allComments[] = $comment -> getFullComment();
+        foreach ($this->comments as $comment) {
+            $allComments[] = $comment->getFullComment();
         }
         return $allComments;
 
@@ -93,23 +93,23 @@ class Comment
 {
     private $comment;
     private $author;
-    private $timeStamp;
+    private $dateTime;
 
     public function __construct($comment, $author)
     {
-        $this -> comment = $comment;
-        $this -> author = $author;
-        $this -> timeStamp = time();
+        $this->comment = $comment;
+        $this->author = $author;
+        $this->dateTime = new DateTime();
     }
 
     public function getFullComment()
     {
-        return array($this -> comment, $this -> author, $this -> getTimeStamp(true));
+        return array($this->comment, $this->author, $this->getDateTime());
     }
 
-    public function getTimeStamp($formatted = false)
+    public function getDateTime()
     {
-        return $formatted ? date('H:i d.m.Y', $this -> timeStamp) : $this -> timeStamp;
+        return $this->dateTime->format('H:i d.m.Y');
     }
 
 }
@@ -118,7 +118,7 @@ $news = [];
 for ($i = 1; $i < rand(2, 10); $i++) {
     $news[$i] = new News('Название новости ' . $i, 'Содержание новости ' . $i, 'Автор ' . $i);
     for ($k = 1; $k < rand(0, 10); $k++) {
-        $news[$i] -> setNewComment('Автор ' . $k, 'Это комментарий №' . $k);
+        $news[$i]->setNewComment('Автор ' . $k, 'Это комментарий №' . $k);
     }
 }
 
@@ -137,40 +137,40 @@ for ($i = 1; $i < rand(2, 10); $i++) {
     </style>
   </head>
   <body>
-    <p>Общее количество новостей: <?= News ::getNewsCount() ?> шт.</p>
+    <p>Общее количество новостей: <?= News::getNewsCount() ?> шт.</p>
     <hr>
 
-    <?php foreach ($news as $separateNews) { ?>
+      <?php foreach ($news as $separateNews) { ?>
 
-      <fieldset class="field">
-        <legend><?= $separateNews -> getTitle() ?></legend>
-        <p><?= $separateNews -> getContent() ?></p>
-        <small>Автор: <?= $separateNews -> getAuthor() ?>, дата: <?= $separateNews -> getTimeStamp(true) ?>.</small>
+        <fieldset class="field">
+          <legend><?= $separateNews->getTitle() ?></legend>
+          <p><?= $separateNews->getContent() ?></p>
+          <small>Автор: <?= $separateNews->getAuthor() ?>, дата: <?= $separateNews->getDateTime() ?>.</small>
 
-        <fieldset>
-          <legend>Последние комментарии:</legend>
+          <fieldset>
+            <legend>Последние комментарии:</legend>
 
-            <?php
-            $numLastComments = count($separateNews -> getLastComments(rand(0, 10)));
-            if ($numLastComments === 0) {
-            ?>
+              <?php
+              $numLastComments = count($separateNews->getLastComments(rand(0, 10)));
+              if ($numLastComments === 0) {
+                  ?>
 
-              <p>Комментариев нет.</p>
+                <p>Комментариев нет.</p>
 
-            <?php
-            } else { ?>
+                  <?php
+              } else { ?>
 
-            <p>Всего комментариев: <?= $numLastComments ?> шт.</p>
+                <p>Всего комментариев: <?= $numLastComments ?> шт.</p>
 
-              <?php foreach ($separateNews -> getLastComments($numLastComments) as $comment) { ?>
-              <p><?= $comment[0] ?>, <?= $comment[1] ?>, <?= $comment[2] ?> </p>
+                  <?php foreach ($separateNews->getLastComments($numLastComments) as $comment) { ?>
+                  <p><?= $comment[0] ?>, <?= $comment[1] ?>, <?= $comment[2] ?> </p>
+                  <?php } ?>
+
               <?php } ?>
 
-            <?php } ?>
+          </fieldset>
 
         </fieldset>
-
-      </fieldset>
-    <?php } ?>
+      <?php } ?>
   </body>
 </html>
